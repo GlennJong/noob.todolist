@@ -76,9 +76,9 @@ TodoItem.prototype.bindEvents = function() {
 }
 TodoItem.prototype.onRemoveTodo = function() {
   var todoArray = this.father.todos,
-      todoId    = this.id
+      todoIndex = todoArray.indexOf(this)
 
-  todoArray[todoId].$elem.remove()
+  todoArray[todoIndex].$elem.remove()
 }
 
 function App() {
