@@ -62,7 +62,7 @@ TodoItem.prototype.buildElem = function(id, title) {
   $label.setAttribute('for', id)
   $checkbox.setAttribute('type', 'checkbox')
   $checkbox.setAttribute('id', id)
-  $btn.textContent = '已完成'
+  $btn.textContent = '刪除'
   
   $li.append($checkbox)
   $li.append($label)
