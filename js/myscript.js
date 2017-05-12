@@ -1,6 +1,19 @@
+// General
+general = {
+  globalID: 0,
+  todos: []
+}
+function recoverLocalStorage() {
+  if (localStorage.todoSave) {
+    var recoverTodo = JSON.parse(localStorage.todoSave)
+    general.todos = recoverTodo
+    general.globalID = recoverTodo.length
+  }
+}
+recoverLocalStorage()
+console.log(general.todos)
 function TodoList() {
   this.$elem = this.buildElem()
-  this.todos = []
   this.bindEvents() 
 }
 TodoList.prototype.buildElem = function() {
@@ -21,34 +34,25 @@ TodoList.prototype.bindEvents = function() {
   button.addEventListener('click', this.onCreateTodo.bind(this))
 }
 TodoList.prototype.onCreateTodo = function() {
-
   // 建立 newTodo
   var input     = this.$elem.querySelector('input')
+  var ul        = this.$elem.querySelector('ul')
   var title     = input.value
-  var newTodo = new TodoItem(title)
-
-  var ul = this.$elem.querySelector('ul')
+  var newTodo   = new TodoItem(title)
   ul.appendChild(newTodo.$elem)
 
   // 將新 Todo 推到 todos 陣列 
-  this.todos.push(newTodo)
-
-  // 增加新屬性 form，所屬的 TodoList
-  newTodo.father = this
-  // console.log(todoChild)
+  general.todos.push(newTodo)
 
   // reset input value
   input.value = ""
 }
-
-// General
-general = {
-  globalID: 0
-}
 function TodoItem(title) {
   var id = general.globalID ++
 
-  this.id    = id
+  this.id = id
+  this.done = false
+  this.finish = false
   this.$elem = this.buildElem(id, title)
   this.bindEvents()
   return this
@@ -75,17 +79,33 @@ TodoItem.prototype.bindEvents = function() {
   button.addEventListener('click', this.onRemoveTodo.bind(this))
 }
 TodoItem.prototype.onRemoveTodo = function() {
-  var todoArray = this.father.todos,
+  var todoArray = general.todos,
       todoIndex = todoArray.indexOf(this)
 
   todoArray[todoIndex].$elem.remove()
+  todoArray[todoIndex].finish = true
 }
-
+// Begin this APP
 function App() {
   this.createItem()
+}
+// Save to LocalStorage
+function LocalStorage() {
+  var todoSave = JSON.stringify(general.todos)
+  localStorage.setItem('todoSave', todoSave)
 }
 App.prototype.createItem = function () {
   var item = new TodoList()
   document.body.appendChild(item.$elem)
 }
 window.app = new App()
+
+window.onbeforeunload = LocalStorage
+
+
+// window.onbeforeunload = function (event) {
+//     var message = 'Important: Please click on \'Save\' button to leave this page.';
+//     event.returnValue = message;
+//     return message;
+//     console.log('work')
+// };
