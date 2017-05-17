@@ -32,9 +32,9 @@ TodoList.prototype.localStorage = function() {
         done   = temp[i].done,
         clean  = temp[i].clean
 
-    var temp = new TempItem(id, title, done, clean)
+    var newTemp = new TempItem(id, title, done, clean)
     var $ul  = this.$elem.querySelector('ul')
-    $ul.append(temp.$elem)
+    $ul.append(newTemp.$elem)
   }
 }
 
