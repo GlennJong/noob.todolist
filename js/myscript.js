@@ -1,12 +1,13 @@
 // General
 general = {
   globalID: 0,
-  todos: []
+  todos   : [],
+  todoTemp: []
 }
 function recoverLocalStorage() {
   if (localStorage.todoSave) {
     var recoverTodo = JSON.parse(localStorage.todoSave)
-    general.todos = recoverTodo
+    general.todoTemp = recoverTodo
     general.globalID = recoverTodo.length
   }
 }
@@ -24,56 +25,23 @@ TodoList.prototype.construct = function() {
 TodoList.prototype.localStorage = function() {
   // recoverLocalStorage
   recoverLocalStorage()
+  console.log(general.todoTemp)
 
-  var temp = general.todos
+  var temp = general.todoTemp
   for (var i = 0; i < temp.length; i ++) {
-    var id     = temp[i].id,
-        title  = temp[i].title,
-        done   = temp[i].done,
-        clean  = temp[i].clean
 
-    var newTemp = new TempItem(id, title, done, clean)
-    var $ul  = this.$elem.querySelector('ul')
-    $ul.append(newTemp.$elem)
+    if (temp[i].clean == false) {
+      var id     = temp[i].id,
+          title  = temp[i].title
+
+      var newTemp = new TodoItem(id, title)
+      general.todos.push(newTemp)
+
+      var $ul  = this.$elem.querySelector('ul')
+      $ul.append(newTemp.$elem)
+      console.log(general.todos)
+    }
   }
-}
-
-function TempItem(id, title, done, clean) {
-  this.id = id
-  this.title = title
-  this.done = false
-  this.clean = false
-  this.$elem = this.buildElem(id, title)
-  this.bindEvents()
-  return this
-}
-TempItem.prototype.buildElem = function(id, title) {
-  var $li       = document.createElement('li'),
-      $label    = document.createElement('label'),
-      $checkbox = document.createElement('input'),
-      $btn      = document.createElement('button')
-  $label.textContent = title
-  $label.setAttribute('for', id)
-  $checkbox.setAttribute('type', 'checkbox')
-  $checkbox.setAttribute('id', id)
-  $btn.textContent = '刪除'
-  
-  $li.append($checkbox)
-  $li.append($label)
-  $li.append($btn)
-
-  return $li
-}
-TempItem.prototype.bindEvents = function() {
-  var button = this.$elem.querySelector('button')
-  button.addEventListener('click', this.onRemoveTodo.bind(this))
-}
-TempItem.prototype.onRemoveTodo = function() {
-  var todoArray = general.todos,
-      todoIndex = todoArray.indexOf(this)
-
-  todoArray[todoIndex].$elem.remove()
-  todoArray[todoIndex].clean = true
 }
 
 TodoList.prototype.buildElem = function() {
@@ -98,7 +66,8 @@ TodoList.prototype.onCreateTodo = function() {
   var input     = this.$elem.querySelector('input')
   var ul        = this.$elem.querySelector('ul')
   var title     = input.value
-  var newTodo   = new TodoItem(title)
+  var id = general.globalID ++
+  var newTodo   = new TodoItem(id, title)
   ul.appendChild(newTodo.$elem)
 
   // 將新 Todo 推到 todos 陣列 
@@ -109,8 +78,7 @@ TodoList.prototype.onCreateTodo = function() {
   // reset input value
   input.value = ""
 }
-function TodoItem(title) {
-  var id = general.globalID ++
+function TodoItem(id, title) {
 
   this.id = id
   this.title = title
@@ -147,6 +115,8 @@ TodoItem.prototype.onRemoveTodo = function() {
 
   todoArray[todoIndex].$elem.remove()
   todoArray[todoIndex].clean = true
+  console.log(todoArray[todoIndex])
+  console.log(todoArray)
 }
 // Begin this APP
 function App() {
