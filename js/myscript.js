@@ -1,5 +1,5 @@
 // General
-general = {
+var general = {
   globalID: 0,
   todos   : [],
   todoTemp: []
@@ -48,11 +48,20 @@ TodoList.prototype.buildElem = function() {
   var $ul        = document.createElement('ul'),
       $btn       = document.createElement('button'),
       $input     = document.createElement('input'),
-      $container = document.createElement('div')
+      $container = document.createElement('div'),
+      $todoNew   = document.createElement('div')
+
+  $container.setAttribute('class', 'todo-list')
+  $todoNew.setAttribute('class', 'todo-new')
+  $ul.setAttribute('class', 'todo-wrap')
+
   $input.setAttribute('type', 'text')
-  $btn.textContent = '新增項目'
-  $container.append($input)
-  $container.append($btn)
+  $input.setAttribute('placeholder', 'Typing your Todo-list.')
+  $btn.textContent = 'New'
+  $todoNew.append($input)
+  $todoNew.append($btn)
+
+  $container.append($todoNew)
   $container.append($ul)
 
   return $container
@@ -97,7 +106,7 @@ TodoItem.prototype.buildElem = function(id, title) {
   $label.setAttribute('for', id)
   $checkbox.setAttribute('type', 'checkbox')
   $checkbox.setAttribute('id', id)
-  $btn.textContent = '刪除'
+  $btn.textContent = 'delete'
   
   $li.append($checkbox)
   $li.append($label)
@@ -134,11 +143,3 @@ App.prototype.createItem = function () {
 window.app = new App()
 
 window.onbeforeunload = LocalStorage
-
-
-// window.onbeforeunload = function (event) {
-//     var message = 'Important: Please click on \'Save\' button to leave this page.';
-//     event.returnValue = message;
-//     return message;
-//     console.log('work')
-// };
