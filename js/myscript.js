@@ -23,9 +23,7 @@ TodoList.prototype.construct = function() {
 }
 
 TodoList.prototype.localStorage = function() {
-  // recoverLocalStorage
   recoverLocalStorage()
-  console.log(general.todoTemp)
 
   var temp = general.todoTemp
   for (var i = 0; i < temp.length; i ++) {
@@ -39,7 +37,6 @@ TodoList.prototype.localStorage = function() {
 
       var $ul  = this.$elem.querySelector('ul')
       $ul.append(newTemp.$elem)
-      console.log(general.todos)
     }
   }
 }
